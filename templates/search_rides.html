@@ -1,0 +1,123 @@
+{% include 'rider_head.html' %}
+<div class="cust_img">
+   <form action="search_rides">
+       <div class="row">
+           <div class="col-1"></div>
+           <div class="col-2">
+               <label for="source_location">Source Location</label>
+                <select name="source_location_id"  id="source_location" class="form-input form-control">
+                    <option value="" >from location</option>
+                    {% for location in locations: %}
+                    <option value='{{location["_id"]}}' {% if str(source_location_id)==str(location["_id"]) %} selected {% endif %}>{{location['location_name']}}</option>
+                    {%endfor%}
+                </select>
+           </div>
+           <div class="col-2">
+               <label for="destination_location" >destination location</label>
+                <select name="destination_location_id"  id="destination_location" class="form-input form-control">
+                    <option value="" >To location</option>
+                    {% for location in locations: %}
+                    <option value='{{location["_id"]}}' {% if str(destination_location_id)==str(location["_id"]) %} selected {% endif %}>{{location['location_name']}}</option>
+                    {%endfor%}
+                </select>
+           </div>
+           <div class="col-2" style="margin-top:20px">
+               <select name="ride_type" class="form-input form-control" required>
+                                 <option value="" >Choose Ride Type</option>
+                                 <option value='one_way'>One Way</option>
+                                    <option value='round_trip'>Round Trp</option>
+                             </select>
+           </div>
+            <div class="col-3">
+                <input type="date" name="ride_date" id="ride_date" class="form-input form-control mt-20"  value="{{ride_date}}">
+            </div>
+           <div class="col-2">
+               <input type="submit" value="search" class="w-70 p-10 btn background-blue text-color fs-18 mt-20">
+           </div>
+           <div class="col-2"></div>
+       </div>
+   </form>
+   {% for ride in rides %}
+    {% set rating = get_rating_by_ride_id(ride['_id']) %}
+    {% set driver=get_driver_name_by_driver_id(ride['driver_id']) %}
+    {% set ride_start_location=get_location_by_location_id(ride['ride_start_location_id']) %}
+    {% set ride_end_location=get_location_by_location_id(ride['ride_end_location_id']) %}
+    {% set number_of_seats_booked = get_number_of_booked_seats_ride_id(ride['_id']) %}
+        <div class="card background-white p-20 mt-40 w-80 ml-160 border-color-card">
+             <div class="row">
+                   <div class="col-4">
+                      <div class="form-group">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle book-icon-start" viewBox="0 0 16 16">
+                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                        <div class="ml-50  h1-20"><i>{{driver['first_name']}}</i></div>
+                      </div>
+                  </div>
+                 <div class="col-4">
+                     <div style="font-size:20px;text-align:center;text-transform: uppercase;">{{ride["ride_type"]}}</div>
+                 </div>
+             </div>
+             <div class="row mt-10">
+                 <div class="col-1"></div>
+                 <div class="col-3">
+                     <div class="ml-10 mt-10 h1-18">{{ride['start_date_time']}}</div>
+                 </div>
+                <div class="col-2 middle">-----------------></div>
+                <div class="col-3">
+                   <div class="ml-10 mt-10 h1-18">{{ride['end_date_time']}}</div>
+                </div>
+                 <div class="col-2">
+                     <div class="ml-60 h1-30 ">${{ride['price']}}</div>
+                 </div>
+             </div>
+             <div class="row">
+                 <div class="col-2"></div>
+                 <div class="col-4">
+                     <div class="ml-10  h1-18">{{ride_start_location['location_name']}}</div>
+                 </div>
+                <div class="col-4">
+                    <div class="ml-10  h1-18">{{ride_end_location['location_name']}}</div>
+                </div>
+                <div class="col-2">
+                    <div></div>
+                </div>
+             </div>
+            <form action="book_ride">
+               <div class="row">
+                   <div class="col-1 mt-20 ml-20">
+                       <label for="total_seats" class="light_grey">Seats</label>
+                       <div id="total_seats">{{ride['capacity']}}</div>
+                   </div>
+                   <div class="col-2 mt-20 ml-20">
+                       <label for="number_of_seats_booked" class="light_grey">number_of_seats_booked</label>
+                       <div id="number_of_seats_booked" class="ml-40">{{number_of_seats_booked}}</div>
+                   </div>
+                   <div class="col-2 mt-20 ml-20">
+                      <label for="number_of_seats_booked" class="light_grey">available seats</label>
+                      <div class="ml-40">{{ ride['capacity']|int - number_of_seats_booked|int }}</div>
+                   </div>
+                   {%if ride['capacity']|int - number_of_seats_booked|int!=0: %}
+                       <div class="col-3 mt-30 ml-40">
+                           <div>
+                               <input type="hidden"  name="ride_id"  value="{{ride['_id']}}">
+                               <input type="number" name="number_of_seats" placeholder="no.of seats" class="form-input form-control" min="1" max="{{ ride['capacity']|int - number_of_seats_booked|int }}">
+                           </div>
+                       </div>
+                       <div class="col-2 mt-30 ml-40">
+                           <div>
+                               <input type="submit" value="Book" class="w-80 p-7 btn background-blue text-color fs-18 ">
+                           </div>
+                       </div>
+                       <div class="w-45">
+                            {% if rating !=0 %}
+                                <div>Rating:</div>
+                                <div class="mt-10"><a class="link-2 bg-black cc p-2 br-radius-4" href="view_reviews?ride_id={{ride['_id']}}">{{rating}}</a></div>
+                            {% endif %}
+                        </div>
+                   {%endif%}
+               </div>
+            </form>
+        </div>
+    {% endfor%}
+</div>
+

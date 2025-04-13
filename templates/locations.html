@@ -1,0 +1,58 @@
+{% include 'admin_head.html' %}
+<div class="cust_img">
+<div class="row">
+   <div class=" col-2 text-color"></div>
+      <div class="col-9">
+
+             <form action="locations_action" method="post">
+                 <div class="row">
+                      <div class="col-9">
+                           <div class="form-group mt-20">
+                               <input type="text" name="location_name" id="location_name" placeholder="Add Location" class="form-control w-100 p-10">
+                            </div>
+                       </div>
+                       <div class="col-2">
+                           <div class="form-group mt-20 ml-20">
+                              <input type="submit" value="add" class="w-90 p-7 btn background-blue text-color fs-20 ">
+                           </div>
+                      </div>
+                </div>
+           </form>
+
+     </div>
+  <div class="col-2 text-color"></div>
+</div>
+<div class="row mt-70 ">
+    <div class="col-3"></div>
+        <div class="col-6">
+            <div class="card p-15 mt-30">
+            <table class="table w-50  pl-30  m-auto ">
+                   <thead>
+                         <tr>
+                           <th class="text-center text-color fs-20 ">Location Name</th>
+                             <th class="text-center text-color fs-20 ">Action</th>
+                         </tr>
+                   </thead>
+                    <tbody>
+                       {%for location in locations:%}
+                         <tr>
+                            <td class="text-center text-color fs-20">{{location["location_name"]}}</td>
+                             <td>
+                                 <form action="edit_location">
+                                     <input type="hidden" name="location_id" value="{{location['_id']}}">
+                                   <div class="form-group mt-20 ">
+                                      <input type="submit" value="EDIT" class="w-90 p-7 btn background-blue text-color fs-20 ">
+                                   </div>
+                                 </form>
+                             </td>
+                         </tr>
+                        {%endfor%}
+                    </tbody>
+            </table>
+                </div>
+        </div>
+
+    <div class="col-3"></div>
+</div>
+</div>
+

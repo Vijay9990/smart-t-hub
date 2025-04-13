@@ -1,0 +1,127 @@
+{%include 'rider_head.html'%}
+<div  class="cust_img">
+    <form action="book_ride_action" method="post" enctype="multipart/form-data">
+        <div class="row ">
+             <div class="col-6 ">
+                 <div class="card   background-white ml-20 p-10 mt-60">
+
+                     {% for i in range(1,int(number_of_seats)+1) %}
+                     <div class="mt-5">Passenger {{i}}</div>
+                        <div class="row mb-10 mt-5">
+                              <div class="col-4">
+                                  <div>
+                                      <input type="text" name="passenger_first_name{{i}}" id="passenger_first_name" placeholder="Passenger First name" required class="form-input form-control ml-20 w-90">
+                                  </div>
+                              </div>
+                             <div class="col-4">
+                                  <div>
+                                      <input type="text" name="passenger_last_name{{i}}" id="passenger_last_name" placeholder="Passenger Last name" required class="form-input form-control ml-20 w-90">
+                                  </div>
+                              </div>
+                              <div  class="col-4">
+                                   <select name="gender{{i}}" class="form-input form-control ml-20 w-80">
+                                         <option>Gender</option>
+                                         <option value="male">male</option>
+                                         <option value="female">female</option>
+                                   </select>
+                              </div>
+                             <div class="col-4">
+                                <!-- Input for Passenger Image -->
+                                <div>
+                                    <label for="passenger_image{{i}}" class="form-label">Passenger Image</label>
+                                    <input type="file" name="passenger_image{{i}}" id="passenger_image{{i}}" accept="image/*" required class="form-input form-control ml-20 w-80">
+                                </div>
+                               </div>
+                             <div class="col-4"> <!-- Input for Date of Birth -->
+                                <div>
+                                    <label for="dob{{i}}" class="form-label">Date of Birth</label>
+                                    <input type="date" name="dob{{i}}" id="dob{{i}}" required class="form-input form-control ml-20 w-80">
+                                </div>
+                            </div>
+
+                            </div>
+                     <hr>
+                     {% endfor %}
+                     <div class="col-4">
+                        <!-- Textarea for Passenger Details -->
+                        <div>
+                            <label for="passenger_details{{i}}" class="form-label">Passengers Picup Address</label>
+                            <textarea name="passenger_details{{i}}"  id="passenger_details{{i}}" placeholder="Enter passenger details" rows="4" required class="form-input form-control ml-20 w-80"></textarea>
+                        </div>
+                     </div>
+
+                 </div>
+             </div>
+             <div class="col-1"></div>
+             <div class="col-4 mt-50">
+                 <div class="card background-white">
+                      <div class="h1-35 text-center mt-30 font-family">Payment</div>
+                     <div class="mt-20 ml-40">
+                          <label class=" fs-15 light_grey">Price For Each Seat:</label>
+                          <b class="fs-20 ml-5"> ${{ride['price']}}</b>
+                      </div >
+                     <div class="mt-5 ml-40">
+                         <label class=" fs-15 light_grey"> No.Of Seats:</label>
+                         <b class="fs-20 ml-5">{{number_of_seats}}</b>
+                     </div>
+                     <div class="mt-5 ml-40">
+                         <label class=" fs-15 light_grey">Total price:</label>
+                         <b class="fs-20 ml-5"> ${{total_price}}</b>
+                     </div>
+                      <div>
+                         <input type="hidden" name="total_price" value="{{total_price}}">
+                     </div>
+                     <div>
+                         <input type="hidden" name="ride_id" id="ride_id" value="{{ ride_id }}">
+                     </div>
+                     <div>
+                         <input type="hidden" name="number_of_seats" id="number_of_seats" value="{{number_of_seats}}">
+                     </div>
+                      <div class="row">
+                          <div class="col-6 p-5">
+                              <div class="mt-20">
+                                 <select name="card_type" class="form-input form-control ml-20">
+                                    <option value="">Card type</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="debit card">Debit Card</option>
+                                  </select>
+                               </div>
+                          </div>
+                          <div class="col-6 p-5">
+                             <div class="form-group mt-20 ">
+                                   <input type="number" name="card_number" id="card_number" class="form-input form-control ml-20" placeholder="Card  Number">
+                              </div>
+                         </div>
+                     </div>
+                      <div class="row">
+                          <div class="col-6 p-5">
+                              <div class="mt-20 ">
+                                 <input type="text" name="card_holder_name" id="card_holder_name"  class="form-input form-control ml-20" placeholder="Card Holder Name">
+                               </div>
+                          </div>
+                          <div class="col-6 p-5">
+                             <div class="form-group mt-20 ">
+                                   <input type="number" name="cvv" id="cvv" class="form-input form-control ml-20" placeholder="Cvv">
+                              </div>
+                         </div>
+                     </div>
+                      <div class="row">
+                          <div class="col-6 p-5">
+                              <div class="mt-20">
+                                  <input type="month" name="expiry_date" id="expiry_date" class="form-input form-control ml-20" placeholder="Expiry Date">                               </div>
+                          </div>
+                          <div class="col-6 p-5">
+                             <div class="form-group mt-20 ">
+                                   <textarea id="address" name="address" rows="" cols="50" class="form-input form-control ml-20" placeholder="Enter Address...."></textarea>
+                              </div>
+                         </div>
+                     </div>
+                     <div class="mt-50 mb-20">
+                         <input type="submit"  value="proceed" class="w-90 p-10 btn background-blue text-color text-center fs-20 mb-20 form-input form-control ml-20">
+                     </div>
+                 </div>
+                 </div>
+         </div>
+
+    </form>
+</div>

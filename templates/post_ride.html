@@ -1,0 +1,107 @@
+{% include  'driver_head.html'%}
+<div class="cust_img">
+    <div class="row">
+        <div class="col-4 p-30 mt-20" >
+             <div class="card background-white p-20 ">
+                  <div class="h1-35 text-center mt-30 font-family">Post Ride</div>
+                   <form action="post_ride_action" method="post">
+                           <div class="form-group mt-40">
+                             <select name="ride_start_location_id" class="form-input form-control">
+                                 <option value="" >Choose Ride Start Location</option>
+                                 {% for location in locations: %}
+                                 <option value='{{location["_id"]}}'>{{location['location_name']}}</option>
+                                 {%endfor%}
+                             </select>
+                           </div>
+                           <div class="form-group mt-30">
+                                <select name="ride_end_location_id" class="form-input form-control">
+                                 <option value="" >Choose Ride end Location</option>
+                                 {% for location in locations: %}
+                                 <option value='{{location["_id"]}}'>{{location['location_name']}}</option>
+                                 {%endfor%}
+                             </select>
+                           </div>
+                        <div class="form-group mt-30">
+                                <select name="ride_type" class="form-input form-control" required>
+                                 <option value="" >Choose Ride Type</option>
+                                 <option value='one_way'>One Way</option>
+                                    <option value='round_trip'>Round Trp</option>
+                             </select>
+                           </div>
+                            <div class="mt-30">
+                                <input type="datetime-local" name="start_date_time" id="start_date_time" placeholder=" Enter Start Date And Time" class="form-input form-control">
+                            </div>
+                            <div class="mt-30">
+                                <input type="datetime-local" name="end_date_time" id="end_date_time" placeholder=" Enter  End Date And Time" class="form-input form-control">
+                            </div>
+                             <div class="mt-30">
+                                <input type="number" name="price" id="price" placeholder=" Enter price" class="form-input form-control">
+                            </div>
+                             <div class="mt-30">
+                                <input type="number" name="capacity" id="capacity" placeholder=" Enter capacity" class="form-input form-control">
+                            </div>
+                            <div class="mt-40">
+                               <input type="submit" value="Submit" class="w-90 p-15 btn background-blue text-color fs-20 mb-20" class="form-input form-control">
+                            </div>
+                   </form>
+           </div>
+        </div>
+      <div class="col-8">
+          <div class="row">
+              {% for ride in rides%}
+                {% set ride_start_location=get_location_by_location_id(ride['ride_start_location_id']) %}
+                {% set ride_end_location=get_location_by_location_id(ride['ride_end_location_id']) %}
+              <div class="col-6 mt-20 p-10">
+                   <div class="card background-white card-book mt-10">
+                       <div class="mt-10 fs-15 blue-text   ml-160 fs-25 font-family">View rides</div>
+                         <div style="font-size:20px;text-align:center;text-transform: uppercase;">{{ride["ride_type"]}}</div>
+
+                       <div class="row">
+                            <div class="col-5 p-5">
+                                <div>
+                                    <div class="ml-20 mt-10 h1-18">
+                                        <div>{{ride_start_location['location_name']}}</div>
+                                        <div>{{ride["start_date_time"].strftime("%d-%m-%Y %I:%M %p")}}</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                           <div class="col-2 middle">--------></div>
+
+                           <div class="col-5 p-5">
+                                 <div>
+                                     <div class="ml-10 mt-10 h1-18">
+                                         <div>{{ride_end_location['location_name']}}</div>
+                                         <div>{{ride["end_date_time"].strftime("%d-%m-%Y %I:%M %p")}}</div>
+
+                                     </div>
+                                 </div>
+                           </div>
+                       </div>
+                       <div class="row mb-20">
+                            <div class="col-6 p-5 mt-15">
+                                 <div class="form-group">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-people book-icon-start" viewBox="0 0 16 16">
+                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        </svg>
+                                       <div class="ml-60 h1-20 ">{{ride["capacity"]}}</div>
+                                  </div>
+                            </div>
+                           <div class="col-6 p-5 mt-10">
+                                <div >
+                                     <div class="ml-60 h1-20">${{ride["price"]}}</div>
+                                </div>
+                            </div>
+                       </div>
+                       <div class="mt-10 mb-20 ml-550 fs-20">
+                           <a href="bookings?ride_id={{ride['_id']}}" class="links blue-text">Bookings</a>
+                       </div>
+                    </div>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,55 @@
+{% if session['role']== "admin" %}
+    {% include 'admin_head.html' %}
+{% elif session['role']== "driver" %}
+    {% include 'driver_head.html'%}
+{% elif session['role']== "rider" %}
+    {% include 'rider_head.html'%}
+{% endif %}
+
+<div class="avpc-container mt-20 ml-300">
+  <h1>Payment Details</h1>
+  <div class="avpc-form-container">
+    <table class="payments-table">
+      <thead>
+        <tr>
+          <th>Amount</th>
+          <th>Card Number</th>
+          <th>CVV</th>
+          <th>Expiry Date</th>
+<!--          <th>Admin Commission</th>-->
+<!--          <th>Driver Price</th>-->
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for payment in payments %}
+      {% set commission = get_commission_by_booking_id(payment['booking_id']) %}
+        <tr>
+          <td>${{payment['total_price']}}</td>
+          <td>{{payment['card_number']}}</td>
+          <td>{{payment['cvv']}}</td>
+          <td>{{payment['expiry_date']}}</td>
+<!--          <td>-->
+<!--            {% if session['role']== "admin" %}-->
+<!--              ${{commission['admin_commission']}}-->
+<!--            {% endif %}-->
+<!--          </td>-->
+            {% if commission['status'] == 'Cancelled Booked Ride' %}
+                <td>${{ (commission['driver_price'] | float) * 0.3 }}</td>
+            {% endif %}
+<!--          {% if session['role']== "driver" %}-->
+<!--            {% if commission['status']=='Ride Requested' %}-->
+<!--              <td>${{commission['driver_price']}}</td>-->
+<!--            {% endif %}-->
+<!--          {% endif %}-->
+
+          {% if commission['status']=='cancelled' %}
+            <td>$0</td>
+          {% endif %}
+          <td>{{payment['status']}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

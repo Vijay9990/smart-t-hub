@@ -1,0 +1,18 @@
+{% if session['role']== "admin" %}
+    {% include 'admin_head.html' %}
+{% elif session['role']== "driver" %}
+    {% include 'driver_head.html'%}
+{% elif session['role']== "rider" %}
+    {% include 'rider_head.html'%}
+{% endif %}
+<div class="w-80  m-auto">
+    <div class="text-center">Customer Reviews</div>
+    {% for review in reviews %}
+        {% set rider = get_rider_by_rider_id(review['rider_id']) %}
+        <div class="card p-20 mt-10">
+            <div class="row"><div class="w-50">Review By: {{rider['first_name']}}</div> <div class="w-50">Reviewed on : {{review['date'].strftime("%d-%m-%Y %I:%M %p")}}</div></div>
+            <div>Rating: {{review['rating']}}</div>
+            <div>Review: {{review['review']}}</div>
+        </div>
+    {% endfor %}
+</div>

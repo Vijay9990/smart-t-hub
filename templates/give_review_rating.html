@@ -1,0 +1,28 @@
+{% if session['role']== "admin" %}
+    {% include 'admin_head.html' %}
+{% elif session['role']== "driver" %}
+    {% include 'driver_head.html'%}
+{% elif session['role']== "rider" %}
+    {% include 'rider_head.html'%}
+{% endif %}
+<div class="card w-50 mt-100 p-10 ml-300">
+    <h1>Give Review</h1>
+    <form action="give_review_action">
+        <input type="hidden" name="booking_id" value="{{booking_id}}">
+        <div class="row">
+            <div><label for="rating">Rating</label><br></div>
+            <div>
+                 <select id="rating" name="rating" class="input-1 ml-5" required>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+        </div>
+        <div><label for="review">Review</label><br></div>
+        <div><textarea class="w-100 h-100" id="review" name="review"></textarea><br></div>
+        <div><input type="submit" class="w-90 ml-50 p-10 btn background-blue text-color fs-20 " value="Send"></div>
+    </form>
+</div>

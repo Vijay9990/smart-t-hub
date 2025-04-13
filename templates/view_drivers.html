@@ -1,0 +1,86 @@
+{% include 'admin_head.html' %}
+<div class="cust_img">
+  <!-- Search Bar -->
+  <div class="search-bar  mb-20">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search by driver's name..."
+      class="form-group w-10 ml-750"
+      onkeyup="filterDrivers()"
+    >
+  </div>
+
+  <div class="row" id="driverContainer">
+    {% for driver in drivers %}
+      <div class="col-3 driver-card">
+        <div class="card background-white card-book mt-20 ml-20">
+          <img
+            src="../static/vehicle/{{driver['image']}}"
+            width="50%"
+            class="driver_img ml-80 mt-20"
+          >
+          <div class="driver-name">
+            <label class="light_grey"></label>
+            <div class="mt-10 fs-15 blue-text font-book-text book-label fs-20 ml-80">
+              <i>{{ driver["first_name"] }} {{ driver["last_name"] }}</i>
+            </div>
+          </div>
+          <div>
+            <label class="light_grey">Email</label>
+            <div class="book-label ml-45 ">{{ driver["email"] }}</div>
+          </div>
+          <div>
+            <label class="light_grey">Phone</label>
+            <div class="book-label ml-45 ">{{ driver["phone"] }}</div>
+          </div>
+          <div>
+            <label class="light_grey">Password</label>
+            <div class="book-label ml-45 ">{{ driver["password"] }}</div>
+          </div>
+          <div>
+            <label class="light_grey">Address</label>
+            <div class="book-label ml-45 ">
+              {{ driver["state"] }}, {{ driver["city"] }}, {{ driver["zip_code"] }}
+            </div>
+          </div>
+          <div>
+            <label class="light_grey">License Number</label>
+            <div class="book-label ml-50 ">{{ driver["driver_license_number"] }}</div>
+          </div>
+          <div>
+            <label class="light_grey">Status</label>
+            <div class="book-label ml-50 ">{{ driver["status"] }}</div>
+          </div>
+          <div class="ml-30 mt-30 mb-20">
+            {% if driver['status'] == 'UnAuthorized' %}
+              <div class="links w-80 p-8 btn background-blue text-color fs-20 text-center">
+                <a href="active_driver?driver_id={{ driver['_id'] }}" class="links text-color">Authorize</a>
+              </div>
+            {% else %}
+              <div class="links w-80 p-8 btn background-blue text-color fs-20 text-center">
+                <a href="deactivate_driver?driver_id={{ driver['_id'] }}" class="links text-color">Unauthorized</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function filterDrivers() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.driver-card');
+
+    cards.forEach(card => {
+      const name = card.querySelector('.driver-name i').textContent.toLowerCase();
+      if (name.includes(input)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
