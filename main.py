@@ -37,5 +37,3 @@ def send_email(subject, message, to):
 def home():
     return " Flask app is deployed successfully on Render!"
 
-# === NOTE ===
-# Do NOT add `app.run(...)` — Render uses gunicorn to serve the app.
