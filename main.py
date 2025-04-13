@@ -131,8 +131,11 @@ def driver_registration():
     return render_template("driver_registration.html")
 
 
-@app.route("/driver_registration_action", methods=['post'])
+from werkzeug.security import generate_password_hash
+
+@app.route("/driver_registration_action", methods=['POST'])
 def driver_registration_action():
+    # Get the form data
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
     email = request.form.get("email")
@@ -142,24 +145,58 @@ def driver_registration_action():
     city = request.form.get("city")
     zip_code = request.form.get("zip_code")
     image = request.files.get("driver_image")
-    path = APP_ROOT_VEHICLE + "/" + image.filename
+    
+    # Check if the image is provided
+    if not image:
+        return render_template("message.html", message="Please upload an image")
+
+    # Define the file saving path (make sure APP_ROOT_VEHICLE is defined properly)
+    path = os.path.join(APP_ROOT_VEHICLE, image.filename)
+    
+    # Save the image
     image.save(path)
+
+    # Get additional vehicle details
     car_number = request.form.get("car_number")
     vehicle_make = request.form.get("vehicle_make")
     model = request.form.get("model")
     year = request.form.get("year")
     driver_license_number = request.form.get("driver_license_number")
-    driver = driver_collection.count_documents({"email": email})
-    if driver:
-        return render_template("message.html", message="this email is already exist")
-    driver = driver_collection.count_documents({"phone": phone})
-    if driver:
-        return render_template("message.html", message="this  phone number  is already exist")
-    new_driver = {"first_name": first_name, "last_name": last_name, "email": email, "phone": phone,"image": image.filename,
-                  "password": password, "state": state, "city": city, "zip_code": zip_code,"car_number":car_number,"vehicle_make":vehicle_make,"model":model,"year":year,
-                  "driver_license_number": driver_license_number, "status": "UnAuthorized"}
+
+    # Check if email or phone already exists
+    if driver_collection.count_documents({"email": email}) > 0:
+        return render_template("message.html", message="This email is already registered.")
+    
+    if driver_collection.count_documents({"phone": phone}) > 0:
+        return render_template("message.html", message="This phone number is already registered.")
+
+    # Hash the password before saving
+    hashed_password = generate_password_hash(password)
+
+    # Prepare the new driver data
+    new_driver = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "email": email,
+        "phone": phone,
+        "image": image.filename,
+        "password": hashed_password,
+        "state": state,
+        "city": city,
+        "zip_code": zip_code,
+        "car_number": car_number,
+        "vehicle_make": vehicle_make,
+        "model": model,
+        "year": year,
+        "driver_license_number": driver_license_number,
+        "status": "UnAuthorized"
+    }
+
+    # Insert the new driver into the database
     driver_collection.insert_one(new_driver)
-    return render_template("message.html", message="Data Inserted Successfully")
+
+    return render_template("message.html", message="Driver registered successfully!")
+
 
 
 @app.route("/driver_login")
