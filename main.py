@@ -10,9 +10,9 @@ from email.mime.text import MIMEText
 app = Flask(__name__)
 
 # ===== MongoDB Setup (Render Cloud-Ready) =====
-mongo_uri = os.environ.get("mongodb+srv://charansanthosh1675:Charan@1675@cluster0.6x3ftyc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongo_uri = os.environ.get("MONGO_URI")  # ✅ Correct way
 client = MongoClient(mongo_uri)
-db = client["ride-booking"]  # <-- Replace with your actual MongoDB database name
+db = client["ride-booking"]  # ✅ Your actual database name
 
 # ===== Gmail API Email Function =====
 def send_email(subject, message, to):
@@ -35,5 +35,4 @@ def send_email(subject, message, to):
 # ===== Sample Route to Test Deployment =====
 @app.route('/')
 def home():
-    return " Flask app is deployed successfully on Render!"
-
+    return "✅ Flask app is deployed successfully on Render!"
