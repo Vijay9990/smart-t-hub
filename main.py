@@ -16,7 +16,7 @@ app.secret_key = 'ride_sharing'
 
 # ===== MongoDB Setup (Cloud-Ready for Render) =====
 mongo_uri = os.environ.get("MONGO_URI")  # Add this in your Render environment variables
-client = MongoClient(mongo_uri)
+client = MongoClient("mongodb+srv://vijaykoppula:vijaykoppula@cluster0.boazmhb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["ride-booking"]  # ✅ Your actual database name
 
 # ===== Collection Shortcuts =====
@@ -204,22 +204,25 @@ def driver_login():
     return render_template("driver_login.html")
 
 
-@app.route("/driver_login_action", methods=['post'])
+@app.route('/driver_login_action', methods=['POST'])
 def driver_login_action():
     email = request.form.get("email")
     password = request.form.get("password")
-    query = {"email": email, "password": password}
-    count = driver_collection.count_documents(query)
-    if count > 0:
-        driver = driver_collection.find_one(query)
-        if driver["status"] == 'UnAuthorized':
-            return render_template("message.html", message="Your Account Not Verified")
+
+    driver = driver_collection.find_one({"email": email})
+    if driver:
+        import bcrypt
+        if bcrypt.checkpw(password.encode('utf-8'), driver["password"].encode('utf-8')):
+            if driver["status"] == "UnAuthorized":
+                return render_template("message.html", message="Your Account Not Verified")
+            else:
+                session['driver_id'] = str(driver["_id"])
+                session['role'] = 'driver'
+                return redirect("/driver_home")
         else:
-            session['driver_id'] = str(driver["_id"])
-            session['role'] = 'driver'
-            return redirect("/driver_home")
+            return render_template("message.html", message="Invalid Password")
     else:
-        return render_template("message.html", message="Invalid Login Details")
+        return render_template("message.html", message="Driver Not Found")
 
 
 @app.route("/driver_home")
