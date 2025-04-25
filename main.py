@@ -135,6 +135,7 @@ from werkzeug.security import generate_password_hash
 
 @app.route("/driver_registration_action", methods=['POST'])
 def driver_registration_action():
+    import bcrypt
     # Get the form data
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
@@ -212,7 +213,7 @@ def driver_login_action():
     driver = driver_collection.find_one({"email": email})
     if driver:
         import bcrypt
-        if bcrypt.checkpw(password.encode('utf-8'), driver["password"].encode('utf-8')):
+        if driver and bcrypt.checkpw(password.encode('utf-8'), driver["password"].encode('utf-8')):
             if driver["status"] == "UnAuthorized":
                 return render_template("message.html", message="Your Account Not Verified")
             else:
