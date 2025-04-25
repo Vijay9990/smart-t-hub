@@ -16,8 +16,8 @@ app.secret_key = 'ride_sharing'
 
 # ===== MongoDB Setup (Cloud-Ready for Render) =====
 mongo_uri = os.environ.get("MONGO_URI")  # Add this in your Render environment variables
-client = MongoClient("mongodb+srv://vijaykoppula:vijaykoppula@cluster0.boazmhb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client["ride-booking"]  # ✅ Your actual database name
+client = MongoClient("mongodb+srv://vijaykoppula:vijaykoppula@cluster0.boazmhb.mongodb.net/ride-booking?retryWrites=true&w=majority&appName=Cluster0")
+db = client["ride-booking"]   # ✅ Your actual database name
 
 # ===== Collection Shortcuts =====
 rider_collection = db['rider']
